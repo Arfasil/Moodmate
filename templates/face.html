@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotion Detection & Mental Health Support</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+        }
+        .emotion-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .emotion-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <div class="container mx-auto px-4 py-8">
+        <div class="grid md:grid-cols-3 gap-6">
+            <!-- Video Feed Column -->
+            <div class="md:col-span-2 bg-white rounded-lg shadow-lg p-6 order-1 md:order-1">
+                <h2 class="text-2xl font-bold mb-4 text-center text-gray-800">Emotion Detection</h2>
+                <div class="video-container">
+                    <img id="videoFeed" class="mx-auto rounded-lg shadow-md" alt="Emotion Detection Video Feed">
+                </div>
+                <div class="mt-4 text-center">
+                    <p id="emotionResult" class="text-xl font-semibold text-gray-700">Waiting for emotion detection...</p>
+                </div>
+            </div>
+
+            <!-- Mental Health Resources Column -->
+            <div class="bg-white rounded-lg shadow-lg p-6 order-2 md:order-2">
+                <h2 class="text-2xl font-bold mb-4 text-center text-gray-800">Mental Health Support</h2>
+                <div id="mentalHealthTips" class="space-y-4">
+                    <div class="emotion-card bg-blue-100 p-4 rounded-lg">
+                        <h3 class="font-bold text-blue-800">Understanding Your Emotions</h3>
+                        <p class="text-blue-600">Emotions are a natural part of human experience. It's okay to feel what you're feeling.</p>
+                    </div>
+                    <div class="emotion-card bg-green-100 p-4 rounded-lg">
+                        <h3 class="font-bold text-green-800">Emotional Wellness Tips</h3>
+                        <ul class="list-disc list-inside text-green-600">
+                            <li>Practice daily self-care</li>
+                            <li>Connect with loved ones</li>
+                            <li>Maintain a balanced lifestyle</li>
+                        </ul>
+                    </div>
+                    <div class="emotion-card bg-purple-100 p-4 rounded-lg">
+                        <h3 class="font-bold text-purple-800">Coping Strategies</h3>
+                        <p class="text-purple-600">
+                            • Deep breathing exercises
+                            • Mindfulness meditation
+                            • Journaling your thoughts
+                        </p>
+                    </div>
+                    <div class="emotion-card bg-pink-100 p-4 rounded-lg">
+                        <h3 class="font-bold text-pink-800">Professional Support</h3>
+                        <p class="text-pink-600">Remember, seeking help is a sign of strength. Professional counselors are always available.</p>
+                    </div>
+                </div>
+                <div class="mt-6 text-center">
+                    <a href="#" class="bg-pink-500 text-white px-4 py-2 rounded-full hover:bg-pink-600 transition duration-300">
+                        Find Support Resources
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to update video feed
+        function updateVideoFeed() {
+            const videoFeed = document.getElementById('videoFeed');
+            videoFeed.src = '/video_feed';
+        }
+
+        // Function to fetch and update emotion
+        function updateEmotion() {
+            fetch('/get_emotion')
+                .then(response => response.json())
+                .then(data => {
+                    const emotionResult = document.getElementById('emotionResult');
+                    emotionResult.textContent = `Current Emotion: ${data.emotion}`;
+                    
+                    // Color coding for emotions
+                    switch(data.emotion.toLowerCase()) {
+                        case 'happy':
+                            emotionResult.className = 'text-xl font-semibold text-green-600';
+                            break;
+                        case 'sad':
+                            emotionResult.className = 'text-xl font-semibold text-blue-600';
+                            break;
+                        case 'angry':
+                            emotionResult.className = 'text-xl font-semibold text-red-600';
+                            break;
+                        case 'fearful':
+                            emotionResult.className = 'text-xl font-semibold text-purple-600';
+                            break;
+                        default:
+                            emotionResult.className = 'text-xl font-semibold text-gray-700';
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Update video feed and emotion periodically
+        updateVideoFeed();
+        setInterval(updateEmotion, 2000); // Update emotion every 2 seconds
+    </script>
+</body>
+</html>

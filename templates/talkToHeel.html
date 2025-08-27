@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Psychological Consultation Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        /* Add loading spinner animation */
+        .loading-spinner {
+            border: 4px solid transparent;
+            border-top: 4px solid white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-900 via-black to-gray-800 text-gray-200 min-h-screen flex items-center justify-center">
+    <div class="container mx-auto px-4">
+        <div class="bg-gradient-to-br from-gray-800 via-gray-900 to-black shadow-2xl rounded-2xl p-8 max-w-4xl mx-auto">
+            <h1 class="text-4xl font-bold text-center text-purple-400 mb-8">
+                Psychological Consultation
+            </h1>
+
+            <!-- Doctors Information -->
+            <div id="doctorCards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <!-- Dynamic doctor cards will be populated here -->
+            </div>
+
+            <!-- Patient Information Form -->
+            <form id="patientForm" class="space-y-6">
+                <div>
+                    <label for="patientName" class="block text-sm font-medium text-gray-400">Patient Name</label>
+                    <input type="text" id="patientName" required 
+                        class="mt-1 block w-full rounded-md border-gray-700 bg-gray-900 text-gray-200 shadow-sm focus:border-purple-500 focus:ring focus:ring-purple-300 focus:ring-opacity-50">
+                </div>
+
+                <div>
+                    <label for="patientEmail" class="block text-sm font-medium text-gray-400">Patient Email</label>
+                    <input type="email" id="patientEmail" required 
+                        class="mt-1 block w-full rounded-md border-gray-700 bg-gray-900 text-gray-200 shadow-sm focus:border-purple-500 focus:ring focus:ring-purple-300 focus:ring-opacity-50">
+                </div>
+
+                <div>
+                    <label for="psychologistSelect" class="block text-sm font-medium text-gray-400">Select Psychologist</label>
+                    <select id="psychologistSelect" required 
+                        class="mt-1 block w-full rounded-md border-gray-700 bg-gray-900 text-gray-200 shadow-sm focus:border-purple-500 focus:ring focus:ring-purple-300 focus:ring-opacity-50">
+                        <!-- Psychologists will be populated dynamically -->
+                    </select>
+                </div>
+
+                <button type="submit" 
+                    class="w-full bg-purple-600 text-white py-3 px-4 rounded-md hover:bg-purple-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">
+                    Request Consultation
+                    <span id="loadingSpinner" class="hidden ml-2 loading-spinner"></span>
+                </button>
+            </form>
+
+            <!-- Zoom Meeting Link Area -->
+            <div id="zoomLinkArea" class="mt-6 hidden">
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+                    <strong class="font-bold">Consultation Confirmed!</strong>
+                    <span id="zoomLinkText" class="block sm:inline"></span>
+                    <a id="joinMeetingLink" href="#" target="_blank" 
+                        class="mt-2 inline-block bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition duration-300">
+                        Join Meeting
+                    </a>
+                </div>
+            </div>
+
+            <!-- Error Message Area -->
+            <div id="errorMessage" class="mt-6 hidden">
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                    <strong class="font-bold">Oops!</strong>
+                    <span id="errorText"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const psychologistSelect = document.getElementById('psychologistSelect');
+            const doctorCards = document.getElementById('doctorCards');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const zoomLinkArea = document.getElementById('zoomLinkArea');
+            const zoomLinkText = document.getElementById('zoomLinkText');
+            const joinMeetingLink = document.getElementById('joinMeetingLink');
+            const errorMessage = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+
+            // Fetch and display psychologist information
+            axios.get('http://localhost:5000/psychologists')
+                .then(response => {
+                    response.data.forEach(psychologist => {
+                        // Populate doctor cards
+                        const card = document.createElement('div');
+                        card.className = 'bg-gradient-to-br from-gray-700 via-gray-800 to-black shadow-lg rounded-lg p-4 text-center';
+                        card.innerHTML = `
+                            <h2 class="text-lg font-semibold text-purple-400">${psychologist.name}</h2>
+                            <p class="text-sm text-gray-400">${psychologist.specialization}</p>
+                            <p class="text-sm text-gray-500">Active: ${psychologist.active_hours_start} - ${psychologist.active_hours_end}</p>
+                        `;
+                        doctorCards.appendChild(card);
+
+                        // Populate psychologist select dropdown
+                        const option = document.createElement('option');
+                        option.value = psychologist.id;
+                        option.textContent = `${psychologist.name} - ${psychologist.specialization}`;
+                        psychologistSelect.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching psychologists:', error);
+                    alert('Failed to load psychologists. Please try again later.');
+                });
+
+            // Handle form submission
+            document.getElementById('patientForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                // Show loading spinner
+                loadingSpinner.classList.remove('hidden');
+
+                const patientName = document.getElementById('patientName').value;
+                const patientEmail = document.getElementById('patientEmail').value;
+                const psychologistId = document.getElementById('psychologistSelect').value;
+
+                axios.post('http://localhost:5000/submit-request', {
+                    patient_name: patientName,
+                    patient_email: patientEmail,
+                    psychologist_id: psychologistId
+                })
+                    .then(response => {
+                        // Hide loading spinner and show zoom link area
+                        loadingSpinner.classList.add('hidden');
+                        zoomLinkArea.classList.remove('hidden');
+                        zoomLinkText.textContent = 'Your consultation request has been submitted.';
+                        joinMeetingLink.href = response.data.zoom_link;
+                    })
+                    .catch(error => {
+                        console.error('Error submitting request:', error);
+                        loadingSpinner.classList.add('hidden');
+                        errorMessage.classList.remove('hidden');
+                        errorText.textContent = 'Failed to submit consultation request. Please try again.';
+                    });
+            });
+        });
+    </script>
+</body>
+</html>

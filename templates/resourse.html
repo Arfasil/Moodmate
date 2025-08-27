@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Health Resources</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #4a4a4a;
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        .resource-card {
+            background-color: #f4f4f4;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            text-align: left;
+            transition: transform 0.3s ease;
+        }
+
+        .resource-card:hover {
+            transform: scale(1.02);
+        }
+
+        .resource-name {
+            font-weight: bold;
+            color: #6a11cb;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .resource-description {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .resource-contact {
+            color: #333;
+            font-weight: bold;
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 20px;
+            color: #6a11cb;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                width: 95%;
+                margin: 10px;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Mental Health Resources</h1>
+        
+        {% for resource in resources %}
+        <div class="resource-card">
+            <div class="resource-name">{{ resource.name }}</div>
+            <div class="resource-description">{{ resource.description }}</div>
+            
+            {% if resource.phone %}
+            <div class="resource-contact">Phone: {{ resource.phone }}</div>
+            {% endif %}
+            
+            {% if resource.text %}
+            <div class="resource-contact">Text: {{ resource.text }}</div>
+            {% endif %}
+            
+            <a href="{{ resource.website }}" target="_blank" style="color: #6a11cb; text-decoration: none; display: block; margin-top: 10px;">
+                Visit Here
+            </a>
+        </div>
+        {% endfor %}
+        
+        <a href="/" class="back-link">Back to Emotion Detection</a>
+    </div>
+</body>
+</html>

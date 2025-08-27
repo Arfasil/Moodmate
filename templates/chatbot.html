@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Health Companion</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+        }
+        .chat-container {
+            height: calc(100vh - 200px);
+        }
+        .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: .5;
+            }
+        }
+        .message {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.5s ease forwards;
+        }
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .breathing-animation {
+            animation: breathe 4s ease-in-out infinite;
+        }
+        @keyframes breathe {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">Mental Health Companion</h1>
+            <p class="text-gray-600">A safe space to share and receive support</p>
+        </header>
+
+        <!-- Main Chat Interface -->
+        <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+            <!-- Chat Messages Container -->
+            <div class="chat-container overflow-y-auto p-6" id="chatContainer">
+                <div class="message bot-message bg-blue-50 rounded-lg p-4 mb-4 max-w-3xl mx-auto">
+                    <p class="text-gray-700">
+                        Hello! I'm here to listen and support you. Feel free to speak or type whenever you're ready. 
+                        Remember, this is a safe space for you to share your thoughts and feelings.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Input Controls -->
+            <div class="border-t border-gray-200 p-4">
+                <div class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4">
+                    <!-- Text Input -->
+                    <div class="flex-1 w-full md:w-auto">
+                        <form id="textForm" class="flex space-x-2">
+                            <input 
+                                type="text" 
+                                id="textInput" 
+                                class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                placeholder="Type your message here..."
+                            >
+                            <button 
+                                type="submit" 
+                                class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"
+                            >
+                                <i class="fas fa-paper-plane mr-2"></i>
+                                Send
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <!-- Voice Controls -->
+                    <div class="flex items-center space-x-4">
+                        <button id="startButton" class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200">
+                            <i class="fas fa-microphone text-white text-xl"></i>
+                        </button>
+                        <div id="recordingStatus" class="text-gray-600 hidden">
+                            <span class="inline-block w-3 h-3 bg-red-500 rounded-full mr-2 animate-pulse"></span>
+                            Listening...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-8 text-center text-gray-600">
+            <p class="text-sm">
+                If you're experiencing a crisis, please reach out for professional help:
+                <br>
+                National Crisis Helpline (US): 988 | Crisis Text Line: Text HOME to 741741
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        const startButton = document.getElementById('startButton');
+        const recordingStatus = document.getElementById('recordingStatus');
+        const chatContainer = document.getElementById('chatContainer');
+
+        let isRecording = false;
+
+        function addMessage(content, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'ml-auto' : 'mr-auto'} ${isUser ? 'bg-blue-100' : 'bg-blue-50'} rounded-lg p-4 mb-4 max-w-3xl`;
+            
+            const textP = document.createElement('p');
+            textP.className = 'text-gray-700';
+            textP.textContent = content;
+            
+            messageDiv.appendChild(textP);
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        // Handle text input submission
+        const textForm = document.getElementById('textForm');
+        const textInput = document.getElementById('textInput');
+
+        textForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const message = textInput.value.trim();
+            
+            if (!message) return;
+
+            // Add user message to chat
+            addMessage(message, true);
+            
+            // Clear input
+            textInput.value = '';
+
+            try {
+                const response = await fetch('/text_chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message: message })
+                });
+
+                const data = await response.json();
+                
+                if (data.response) {
+                    addMessage(data.response);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                addMessage('Sorry, there was an error processing your request.');
+            }
+        });
+
+        // Handle voice input
+        startButton.addEventListener('click', async () => {
+            if (!isRecording) {
+                try {
+                    isRecording = true;
+                    startButton.classList.add('bg-red-500', 'hover:bg-red-600');
+                    startButton.classList.remove('bg-blue-500', 'hover:bg-blue-600');
+                    recordingStatus.classList.remove('hidden');
+
+                    const response = await fetch('/voice_chat', {
+                        method: 'POST'
+                    });
+
+                    const data = await response.json();
+
+                    if (data.user_message && data.user_message !== "Sorry, I didn't catch that.") {
+                        addMessage(data.user_message, true);
+                    }
+                    
+                    if (data.response) {
+                        addMessage(data.response);
+                    }
+
+                } catch (error) {
+                    console.error('Error:', error);
+                    addMessage('Sorry, there was an error processing your request.');
+                } finally {
+                    isRecording = false;
+                    startButton.classList.remove('bg-red-500', 'hover:bg-red-600');
+                    startButton.classList.add('bg-blue-500', 'hover:bg-blue-600');
+                    recordingStatus.classList.add('hidden');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
