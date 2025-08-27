@@ -63,8 +63,8 @@ mental-health-companion/
 
 ⚙️ Installation & Setup
 1. Clone the repository
-git clone https://github.com/your-username/mental-health-companion.git
-cd mental-health-companion
+git clone https://github.com/Arfasil/Moodmate.git
+cd Moodmate
 
 2. Create and activate a virtual environment
 
