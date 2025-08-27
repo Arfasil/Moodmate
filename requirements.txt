@@ -1,0 +1,9 @@
+flask
+opencv-python
+opencv-python-headless
+deepface
+numpy
+flask-sqlalchemy
+flask-cors
+python-dotenv
+gunicorn 
