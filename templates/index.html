@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Health Care</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #2A2A2A, #121212);
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3 {
+            margin: 0;
+        }
+
+        a {
+            text-decoration: none;
+            color: #4CAF50;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #66BB6A;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: #1f1f1f;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+        }
+
+        .navbar a {
+            color: #ffffff;
+            margin: 0 20px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .navbar a:hover {
+            color: #66BB6A;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        /* Feature Buttons */
+        .feature-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+
+        .feature-button {
+            background: linear-gradient(135deg, #4CAF50, #388E3C);
+            color: #ffffff;
+            border: none;
+            padding: 15px 35px;
+            font-size: 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-button:hover {
+            background: linear-gradient(135deg, #66BB6A, #43A047);
+            transform: translateY(-5px);
+        }
+
+        /* Mental Strength Routes */
+        .mental-strength-routes {
+            background: rgba(31, 31, 31, 0.9);
+            border-radius: 15px;
+            padding: 40px;
+            margin: 40px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        .routes-container {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .routes-list {
+            text-align: left;
+            width: calc(50% - 20px);
+            padding: 0;
+            list-style: none;
+        }
+
+        .routes-list li {
+            margin: 10px 0;
+            padding: 10px;
+            background: #2C2C2C;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            transition: background 0.3s ease;
+        }
+
+        .routes-list li:hover {
+            background: #4CAF50;
+        }
+
+        /* Mental Health Resources */
+        .mental-health-resources {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-top: 40px;
+            gap: 20px;
+        }
+
+        .resource-card {
+            background: rgba(44, 44, 44, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            width: calc(33% - 20px);
+            text-align: left;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .resource-card h3 {
+            margin-bottom: 10px;
+            color: #66BB6A;
+        }
+
+        .resource-card p {
+            margin: 5px 0;
+        }
+
+        .resource-card a {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact Us</a>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1>Welcome to Mental Health Care</h1>
+        <p>Empowering you with tools and resources to enhance your mental well-being.</p>
+
+        <!-- Feature Buttons -->
+        <div class="feature-buttons">
+            <button class="feature-button" onclick="window.location.href='{{ url_for('faceEmotionDetection') }}';">Real-Time Emotion Detection</button>
+            <button class="feature-button" onclick="window.location.href='{{ url_for('MentalStateDetection') }}';">Mental State Detection</button>
+            <button class="feature-button" onclick="window.location.href='{{ url_for('chatbot') }}';">Mental Health Chatbot</button>
+            
+            <button class="feature-button" onclick="window.location.href='{{ url_for('doctalk') }}';">Talk to Heal</button>
+            <button class="feature-button" onclick="window.location.href='{{ url_for('depression') }}';">Depression Detection</button>
+        </div>
+
+        <!-- Daily Practices -->
+        <div class="mental-strength-routes">
+            <h2>Daily Routes to Mental Strength</h2>
+            <p>Incorporate these simple daily practices to improve your mental health. Visit <a href="https://www.helpguide.org/" target="_blank">HelpGuide</a> for more detailed tips.</p>
+            <div class="routes-container">
+                <ul class="routes-list">
+                    <li>Start your day with mindfulness or meditation (5-10 minutes).</li>
+                    <li>Exercise or take a 20-minute walk to release endorphins.</li>
+                    <li>Write in a gratitude journal to focus on the positive.</li>
+                    <li>Limit screen time and practice digital detox for 1 hour daily.</li>
+                </ul>
+                <ul class="routes-list">
+                    <li>Connect with loved ones for emotional support.</li>
+                    <li>Engage in a hobby or creative activity.</li>
+                    <li>Get 7-9 hours of quality sleep each night.</li>
+                    <li>Practice breathing exercises to reduce stress.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Mental Health Resources -->
+        <div class="mental-health-resources">
+            <div class="resource-card">
+                <h3>National Suicide Prevention Lifeline</h3>
+                <p>24/7 Support for Mental Health Crisis</p>
+                <a href="https://suicidepreventionlifeline.org/" target="_blank">Visit Website</a>
+                <p>Call: 988</p>
+            </div>
+
+            <div class="resource-card">
+                <h3>Crisis Text Line</h3>
+                <p>Text-based Mental Health Support</p>
+                <a href="https://www.crisistextline.org/" target="_blank">Visit Website</a>
+                <p>Text: HOME to 741741</p>
+            </div>
+
+            <div class="resource-card">
+                <h3>SAMHSA National Helpline</h3>
+                <p>Substance Abuse and Mental Health Services</p>
+                <a href="https://www.samhsa.gov/find-help/national-helpline" target="_blank">Visit Website</a>
+                <p>Call: 1-800-662-HELP (4357)</p>
+            </div>
+
+            <div class="resource-card">
+                <h3>BetterHelp Online Therapy</h3>
+                <p>Professional Counseling and Therapy Services</p>
+                <a href="https://www.betterhelp.com/" target="_blank">Visit Website</a>
+                <p>Connect with a licensed therapist online.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script -->
+    <script>
+        function performRealTimeEmotionDetection() {
+            alert('Real-Time Emotion Detection Feature Coming Soon!');
+        }
+
+        function performMentalStateDetection() {
+            alert('Mental State Detection Feature Coming Soon!');
+        }
+
+        function openMentalChatbot() {
+            alert('Mental Health Chatbot Coming Soon!');
+        }
+
+        function performSentimentalAnalysis() {
+            alert('Sentimental Analysis Feature Coming Soon!');
+        }
+
+        function talkToHeal() {
+            alert('Talk to Heal Feature Coming Soon!');
+        }
+
+        function depressionDetection() {
+            alert('Depression Detection Feature Coming Soon!');
+        }
+    </script>
+</body>
+</html>
