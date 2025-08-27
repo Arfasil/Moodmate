@@ -1,4 +1,4 @@
-"🧠 Moodmate - The Mental Health Companion"
+name:"🧠 Moodmate - The Mental Health Companion"
 
 description: |
   Flask-based AI-powered mental health companion that integrates emotion detection, 
